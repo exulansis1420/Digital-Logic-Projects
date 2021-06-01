@@ -1,0 +1,108 @@
+TANISHQ DUBEY
+2019CS51077
+CODE EXPLANATION
+-------------------------------------
+ENTITY clk_divider
+
+clk - clock input 100MHz
+clk_sec - 1 second clock output
+--------------------------------------
+ARCHITECTURE behaviour OF clk_divider 
+
+toggle -  output signal for 1 second clock
+cycles -  counts the number of cycles passed, gets reset at half a second
+------------------------------------
+ENTITY digital_clk 
+
+clk_sec - input 1 second signal for clk divider
+btnModeSetTime - button toggles set time mode and normal mode
+btnInc -button increases time field value
+btnShiftLeft - input button shifts field being changed to left	
+dotModeSetTime - output dot indicating mode of clock
+sec_out0- 7 bit second unit place output for 7 segment
+sec_out1- 7 bit second tens place output 
+min_out0- 7 bit minute unit place output 
+min_out1- 7 bit minute tens place output 
+hr_out0- 7 bit hr unit place output 
+hr_out1- 7 bit hr tens place output 
+------------------------------------------------
+ENTITY intToHex 
+
+Intin - integer input in decimal
+Hexot - seven segment bits output
+------------------------------------------------
+ARCHITECTURE behaviour OF intToHex 
+
+includes case statement implementing look up table of seven segment display
+----------------------------------------------------
+ARCHITECTURE behaviour OF digital_clk 
+
+sec - keeps track of second field of current time
+min - keeps track of minute field of current time
+hr - keep track of hour field of current time
+btnModeSetTimeCount - keeps track of toggles on or off of button to change mode
+changeField - keeps track of field which is being changed, 0=>SS , 1=>MM, 2=>HH 
+intToHex port map() - convert units and tens digit of SS/MM/HH to hexadecimal for 7 segment
+-----------------------------------------------------------
+ENTITY displayMode 
+
+sec_in0: in STD_LOGIC_VECTOR(6 DOWNTO 0); (6 input signals, 4 to be chosen depending on mode)
+sec_in1: in STD_LOGIC_VECTOR(6 DOWNTO 0);
+min_in0: in STD_LOGIC_VECTOR(6 DOWNTO 0);
+min_in1: in STD_LOGIC_VECTOR(6 DOWNTO 0);
+hr_in0: in STD_LOGIC_VECTOR(6 DOWNTO 0);
+hr_in1: in STD_LOGIC_VECTOR(6 DOWNTO 0);
+btnViewMode - button toggles view mode, HH:MM and MM:SS
+dotBlink - output for signal blinks during display in MM:SS mode at 1 hz
+out0: out STD_LOGIC_VECTOR(6 DOWNTO 0);  (4 chosen output digits for display depending on btnViewMode)
+out1: out STD_LOGIC_VECTOR(6 DOWNTO 0);
+out2: out STD_LOGIC_VECTOR(6 DOWNTO 0);
+out3: out STD_LOGIC_VECTOR(6 DOWNTO 0);
+-----------------------------------------------------------
+ARCHITECTURE behaviour OF displayMode 
+
+SIGNAL btnPress - keeps track of toggle on/off of button used to change view mode
+SIGNAL dotBlinkCounter - counts the number of clk cycles and resets at half second for dot blinking
+-----------------------------------------------------------
+ENTITY segDisplay IS
+	
+clk: input clock 100Mhz signal
+out0: input from displayMode, last digit to display clock
+out1: input from displayMode, third digit
+out2: input from displayMode, second digit
+out3: input from displayMode, first digit
+anode: output 4 bit anode signal decides which digit on FPGA is displayed
+-----------------------------------------------------------
+ARCHITECTURE behaviour OF segDisplay 
+
+SIGNAL counter -  counts the number of cycles passed from clk for clk division for 4ms clk
+SIGNAL clk_4ms -  4ms clock signal which is 1/4 of 16ms the refresh period
+SIGNAL selector - multiplexer, selects which anode is at high and other three at low
+
+anode signal gets multiplexed every 4ms thus with refresh period of 16ms and giving static digit display effect
+------------------------------------------
+
+
+
+			  
+		         
+			   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
